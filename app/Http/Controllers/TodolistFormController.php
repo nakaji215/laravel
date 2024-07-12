@@ -1,5 +1,4 @@
 <?php
-// app/Http/Controllers/TodolistFormController.php
 
 namespace App\Http\Controllers;
 
@@ -11,7 +10,8 @@ class TodolistFormController extends Controller
     public function index()
     {
         $todos = Todo::all();
-        return view('todolist', compact('todos'));
+        $totalEstimateHours = $todos->sum('estimate_hour');
+        return view('todolist', compact('todos', 'totalEstimateHours'));
     }
 
     public function createPage()
@@ -56,9 +56,9 @@ class TodolistFormController extends Controller
         $todo = Todo::find($request->id);
         $todo->update([
             'task_name' => $request->task_name,
-            'task_description' => $request->task_description,
-            'assign_person_name' => $request->assign_person_name,
-            'estimate_hour' => $request->estimate_hour,
+            'task_description' => $request->task_description ?? '',
+            'assign_person_name' => $request->assign_person_name ?? '',
+            'estimate_hour' => $request->estimate_hour ?? 0,
         ]);
 
         return redirect('/todolist');
@@ -66,10 +66,7 @@ class TodolistFormController extends Controller
 
     public function delete($id)
     {
-        $todo = Todo::find($id);
-        if ($todo) {
-            $todo->delete();
-        }
+        Todo::find($id)->delete();
         return redirect('/todolist');
     }
 }

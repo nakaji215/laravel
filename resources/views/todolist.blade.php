@@ -35,6 +35,7 @@
                 </td>
             </tr>
             @endforeach
+            <p>合計見積時間(h): {{$totalEstimateHours}}</p>
         </table>
     </div>
 </body>
